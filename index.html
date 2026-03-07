@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Store</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/src/index.css">
+  <style>
+    :root {
+      --primary: #F27D26;
+      --ink: #141414;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8F9FA;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .premium-card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    .premium-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .metallic-bg {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    .sidebar-active {
+      background-color: var(--primary);
+      color: white;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+  </style>
+</head>
+<body class="text-gray-900">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-600">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        <h1 id="store-logo" class="text-2xl font-black tracking-tighter text-primary italic">PREMIUM STORE</h1>
+      </div>
+
+      <div class="flex-1 max-w-2xl relative hidden md:block">
+        <input type="text" id="search-input" placeholder="O que você está procurando hoje?" 
+          class="w-full bg-gray-100 border-none rounded-full py-3 px-6 pl-12 focus:ring-2 focus:ring-primary/20 transition-all">
+        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="share-btn" class="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-600" title="Compartilhar">
+          <i class="fas fa-share-alt"></i>
+        </button>
+        <a href="admin.html" class="p-3 rounded-full hover:bg-gray-100 transition-colors text-gray-600" title="Painel ADM">
+          <i class="fas fa-user-shield"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 py-8 flex gap-8">
+    
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 hidden lg:block shrink-0">
+      <div class="sticky top-28 space-y-8">
+        <section>
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 px-4">Categorias</h3>
+          <ul id="category-list" class="space-y-1">
+            <!-- Categories will be rendered here -->
+          </ul>
+        </section>
+
+        <section>
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 px-4">Redes Sociais</h3>
+          <div id="social-links" class="flex gap-2 px-4">
+            <!-- Social links will be rendered here -->
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 space-y-12 overflow-hidden">
+      
+      <!-- Banner -->
+      <section id="main-banner" class="relative h-[400px] rounded-[32px] overflow-hidden bg-cover bg-center flex items-center px-12 group">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+        <div class="relative z-10 max-w-lg space-y-4">
+          <h1 class="text-5xl font-black leading-tight">OFERTAS DO DIA</h1>
+          <p class="text-xl opacity-90">Os melhores achadinhos com os menores preços</p>
+          <button class="bg-primary text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
+            VER AGORA
+          </button>
+        </div>
+      </section>
+
+      <!-- Most Clicked -->
+      <section id="most-clicked-section" class="hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-black italic uppercase tracking-tight">Produtos Mais Clicados</h2>
+          <div class="h-1 flex-1 mx-6 bg-black/5 rounded-full"></div>
+        </div>
+        <div id="most-clicked-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Most clicked products will be rendered here -->
+        </div>
+      </section>
+
+      <!-- Best Offers -->
+      <section id="best-offers-section">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-black italic uppercase tracking-tight">Melhores Ofertas</h2>
+          <div class="h-1 flex-1 mx-6 bg-black/5 rounded-full"></div>
+        </div>
+        <div id="best-offers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Best offers will be rendered here -->
+        </div>
+      </section>
+
+      <!-- All Products -->
+      <section id="products-section">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-black italic uppercase tracking-tight">Todos os Produtos</h2>
+          <div class="h-1 flex-1 mx-6 bg-black/5 rounded-full"></div>
+        </div>
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- All products will be rendered here -->
+        </div>
+      </section>
+
+      <!-- Videos -->
+      <section id="videos-section" class="hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-black italic uppercase tracking-tight">Vídeos de Produtos</h2>
+          <div class="h-1 flex-1 mx-6 bg-black/5 rounded-full"></div>
+        </div>
+        <div id="videos-scroll" class="flex gap-6 overflow-x-auto pb-6 snap-x">
+          <!-- Videos will be rendered here -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="bg-white border-t border-black/5 py-12 mt-20">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-4">
+      <p class="text-2xl font-black text-primary italic">PREMIUM STORE</p>
+      <p class="text-gray-500 text-sm">© 2024 Todos os direitos reservados. Loja de Afiliados Premium.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/script.js"></script>
+</body>
+</html>
