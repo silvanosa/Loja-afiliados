@@ -1,7 +1,6 @@
 [build]
-base = "Loja-Afiliados"
 command = "npm install && npm run build"
-publish = "Loja-Afiliados/dist"
+publish = "dist"
 
 [functions]
-directory = "Loja-Afiliados/netlify/functions"
+directory = "netlify/functions"
