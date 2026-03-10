@@ -2,13 +2,13 @@ exports.handler = async function(event) {
 
   try {
 
-    const query = event.queryStringParameters.q || "ofertas";
+    const query = event.queryStringParameters?.q || "ofertas";
 
     const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${encodeURIComponent(query)}`);
 
     const data = await response.json();
 
-    const products = data.results.slice(0,10).map(item => ({
+    const products = (data.results || []).slice(0,10).map(item => ({
       id: item.id,
       name: item.title,
       price: item.price,
