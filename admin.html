@@ -33,8 +33,11 @@
         <button data-tab="products" class="tab-btn w-full text-left px-4 py-3 rounded-xl font-medium transition-colors hover:bg-gray-100">
           <i class="fas fa-box mr-2"></i> Produtos
         </button>
-        <button data-tab="import" class="tab-btn w-full text-left px-4 py-3 rounded-xl font-medium transition-colors hover:bg-gray-100">
-          <i class="fas fa-download mr-2"></i> Importar API
+        <h3>Importar produto por link</h3>
+
+        <input type="text" id="productLink" placeholder="Cole o link do produto">
+
+        <button onclick="importarProduto()">Importar Produto</button>I
         </button>
         <button data-tab="videos" class="tab-btn w-full text-left px-4 py-3 rounded-xl font-medium transition-colors hover:bg-gray-100">
           <i class="fas fa-video mr-2"></i> Vídeos
@@ -190,5 +193,30 @@
   </div>
 
   <script type="module" src="/src/admin.js"></script>
+<script>
+
+function importarProduto(){
+
+const link = document.getElementById("productLink").value;
+
+if(!link){
+alert("Cole o link do produto");
+return;
+}
+
+const produto = {
+name: "Produto do Mercado Livre",
+price: "Ver preço no site",
+image: "https://via.placeholder.com/300",
+link: link
+};
+
+console.log(produto);
+
+alert("Produto criado!");
+
+}
+
+</script>
 </body>
 </html>
