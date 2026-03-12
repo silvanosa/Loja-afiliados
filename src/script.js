@@ -201,3 +201,39 @@ function filterProducts(category) {
   // Scroll to products
   document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' });
 }
+// carregar produtos salvos manualmente
+
+const grid = document.getElementById("products-grid");
+
+if(grid){
+
+const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+
+produtos.forEach(produto => {
+
+const card = document.createElement("div");
+
+card.innerHTML = `
+<div class="bg-white rounded-xl shadow p-4">
+
+<img src="${produto.imagem}" class="w-full h-48 object-cover rounded">
+
+<h3 class="font-bold mt-3">${produto.nome}</h3>
+
+<p class="text-primary font-bold">${produto.preco}</p>
+
+<p class="text-sm text-gray-500">${produto.descricao}</p>
+
+<a href="${produto.link}" target="_blank"
+class="block mt-3 bg-black text-white text-center py-2 rounded">
+Comprar
+</a>
+
+</div>
+`;
+
+grid.appendChild(card);
+
+});
+
+}

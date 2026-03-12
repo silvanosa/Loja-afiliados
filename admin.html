@@ -193,31 +193,51 @@
   </div>
 
   <script type="module" src="/src/admin.js"></script>
-<script> function importarProduto(){
+<script> 
+<button class="menu-btn" onclick="abrirFormularioProduto()">
+📦 Adicionar Produto
+</button>
+</script>
+<div id="formProduto" style="display:none;padding:20px">
 
-const link = document.getElementById("productLink").value;
+<h3>Adicionar Produto</h3>
 
-if(!link){
-alert("Cole o link do produto");
-return;
+<input id="nomeProduto" placeholder="Nome do produto"><br><br>
+
+<input id="precoProduto" placeholder="Preço"><br><br>
+
+<input id="imagemProduto" placeholder="Link da imagem"><br><br>
+
+<input id="linkProduto" placeholder="Link afiliado"><br><br>
+
+<textarea id="descricaoProduto" placeholder="Descrição"></textarea><br><br>
+
+<button onclick="salvarProduto()">Salvar Produto</button>
+
+</div>
+<script>
+
+function abrirFormularioProduto(){
+document.getElementById("formProduto").style.display = "block";
 }
 
-const name = prompt("Nome do produto:");
-const price = prompt("Preço do produto:");
-const image = prompt("Link da imagem do produto:");
+function salvarProduto(){
 
-const novoProduto = `
-{
-name: "${name}",
-price: "${price}",
-image: "${image}",
-link: "${link}"
-},
-`;
+let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
 
-console.log(novoProduto);
+const novoProduto = {
+nome: document.getElementById("nomeProduto").value,
+preco: document.getElementById("precoProduto").value,
+imagem: document.getElementById("imagemProduto").value,
+link: document.getElementById("linkProduto").value,
+descricao: document.getElementById("descricaoProduto").value
+};
 
-alert("Produto criado! Copie no console e cole no products.js");
+produtos.push(novoProduto);
+
+localStorage.setItem("produtos", JSON.stringify(produtos));
+
+alert("Produto adicionado!");
 
 }
 
