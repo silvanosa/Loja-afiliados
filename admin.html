@@ -193,9 +193,7 @@
   </div>
 
   <script type="module" src="/src/admin.js"></script>
-<script>
-
-function importarProduto(){
+<script> function importarProduto(){
 
 const link = document.getElementById("productLink").value;
 
@@ -204,16 +202,22 @@ alert("Cole o link do produto");
 return;
 }
 
-const produto = {
-name: "Produto do Mercado Livre",
-price: "Ver preço no site",
-image: "https://via.placeholder.com/300",
-link: link
-};
+const name = prompt("Nome do produto:");
+const price = prompt("Preço do produto:");
+const image = prompt("Link da imagem do produto:");
 
-console.log(produto);
+const novoProduto = `
+{
+name: "${name}",
+price: "${price}",
+image: "${image}",
+link: "${link}"
+},
+`;
 
-alert("Produto criado!");
+console.log(novoProduto);
+
+alert("Produto criado! Copie no console e cole no products.js");
 
 }
 
