@@ -1,18 +1,17 @@
-const products = [];
 const products = [
 
 {
-name: "Produto teste",
-price: "R$100",
-image: "imagem.jpg",
-link: "#"
+name: "Máquina de Corte Profissional",
+price: "R$ 89,90",
+image: "https://via.placeholder.com/300",
+link: "https://mercadolivre.com"
 },
 
 {
-name: "Máquina de Barbear",
-price: "R$89",
-image: "link-da-imagem",
-link: "link-afiliado"
+name: "Fone Bluetooth Premium",
+price: "R$ 129,90",
+image: "https://via.placeholder.com/300",
+link: "https://mercadolivre.com"
 }
 
 ];
