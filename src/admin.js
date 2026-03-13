@@ -48,6 +48,7 @@ function renderAdmin() {
   renderCategories();
   renderProductsList();
   renderVideosList();
+  populateCategoryDropdown();
 }
 
 function renderSettings() {
@@ -84,18 +85,21 @@ function renderProductsList() {
   const list = document.getElementById('admin-products-list');
   if (!list) return;
 
+  if (currentData.products.length === 0) {
+    list.innerHTML = '<p class="text-gray-500 text-sm italic">Nenhum produto cadastrado ainda.</p>';
+    return;
+  }
+
   list.innerHTML = currentData.products.map((p, index) => `
     <div class="bg-white p-4 rounded-xl border border-gray-200 flex gap-4">
-      <img src="${p.image}" class="w-20 h-20 object-cover rounded-lg">
+      <img src="${p.image}" alt="${p.name}" class="w-20 h-20 object-cover rounded-lg" referrerPolicy="no-referrer">
       <div class="flex-1">
         <h4 class="font-bold text-gray-900">${p.name}</h4>
-        <p class="text-sm text-gray-500">R$ ${p.price}</p>
+        <p class="text-sm text-gray-500">R$ ${parseFloat(p.price).toFixed(2)}</p>
+        <p class="text-xs text-gray-400 mt-1">${p.description || ''}</p>
         <div class="mt-2 flex gap-2">
-          <input type="text" placeholder="Link Afiliado" value="${p.affiliateLink || ''}" 
-            onchange="updateAffiliateLink(${index}, this.value)"
-            class="flex-1 text-sm border border-gray-300 rounded px-2 py-1">
-          <button onclick="deleteProduct(${index})" class="text-red-500">
-            <i class="fas fa-trash"></i>
+          <button onclick="deleteProduct(${index})" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-trash mr-1"></i> Remover
           </button>
         </div>
       </div>
@@ -120,6 +124,14 @@ function renderVideosList() {
   `).join('');
 }
 
+function populateCategoryDropdown() {
+  const select = document.querySelector('select[name="productCategory"]');
+  if (!select) return;
+
+  select.innerHTML = '<option value="">Selecione uma Categoria</option>' +
+    currentData.categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+}
+
 function setupForms() {
   // Settings Form
   document.getElementById('settings-form')?.addEventListener('submit', (e) => {
@@ -134,7 +146,7 @@ function setupForms() {
     currentData.settings.social.instagram = fd.get('instagram');
     currentData.settings.social.whatsapp = fd.get('whatsapp');
     currentData.settings.social.facebook = fd.get('facebook');
-    
+
     if (fd.get('newPassword')) {
       currentData.settings.adminPassword = fd.get('newPassword');
     }
@@ -151,8 +163,42 @@ function setupForms() {
       currentData.categories.push(name);
       db.save(currentData);
       renderCategories();
+      populateCategoryDropdown();
       e.target.reset();
     }
+  });
+
+  // Product Form
+  document.getElementById('product-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const name = fd.get('productName');
+    const price = fd.get('productPrice');
+    const image = fd.get('productImage');
+    const affiliateLink = fd.get('productLink');
+    const description = fd.get('productDescription') || '';
+    const category = fd.get('productCategory') || '';
+
+    if (!name || !price || !image || !affiliateLink) {
+      alert('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    const newProduct = {
+      id: 'prod_' + Date.now(),
+      name,
+      price: parseFloat(price.replace(',', '.')) || 0,
+      image,
+      affiliateLink,
+      description,
+      category
+    };
+
+    currentData.products.push(newProduct);
+    db.save(currentData);
+    renderProductsList();
+    e.target.reset();
+    alert('Produto adicionado com sucesso!');
   });
 
   // Video Form
@@ -161,53 +207,12 @@ function setupForms() {
     const title = e.target.elements.videoTitle.value;
     const link = e.target.elements.videoLink.value;
     const description = e.target.elements.videoDesc.value;
-    
+
     if (title && link) {
       currentData.videos.push({ title, link, description });
       db.save(currentData);
       renderVideosList();
       e.target.reset();
-    }
-  });
-
-  // Import Form
-  document.getElementById('import-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const query = e.target.elements.importQuery.value;
-    const btn = e.target.querySelector('button');
-    
-    if (!query) return;
-
-    btn.disabled = true;
-    btn.textContent = 'Importando...';
-
-    try {
-      const apiUrl = window.location.hostname === 'localhost' || window.location.hostname.includes('run.app') 
-        ? `/api/importar-produtos?q=${encodeURIComponent(query)}`
-        : `/.netlify/functions/importar-produtos?q=${encodeURIComponent(query)}`;
-        
-      const response = await fetch(apiUrl);
-      const products = await response.json();
-      
-      products.forEach(p => {
-        // Avoid duplicates
-        if (!currentData.products.find(existing => existing.id === p.id)) {
-          currentData.products.push({
-            ...p,
-            affiliateLink: ''
-          });
-        }
-      });
-
-      db.save(currentData);
-      renderProductsList();
-      alert(`${products.length} produtos importados!`);
-    } catch (err) {
-      console.error(err);
-      alert('Erro ao importar produtos.');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'IMPORTAR PRODUTOS';
     }
   });
 }
@@ -228,9 +233,4 @@ window.deleteVideo = (index) => {
   currentData.videos.splice(index, 1);
   db.save(currentData);
   renderVideosList();
-};
-
-window.updateAffiliateLink = (index, value) => {
-  currentData.products[index].affiliateLink = value;
-  db.save(currentData);
 };

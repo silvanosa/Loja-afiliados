@@ -72,27 +72,35 @@ function renderProducts(products, filter = null) {
     filtered = products.filter(p => p.category === filter || p.name.toLowerCase().includes(filter.toLowerCase()));
   }
 
+  if (filtered.length === 0) {
+    container.innerHTML = '<p class="col-span-full text-center text-gray-400 py-12">Nenhum produto disponível no momento.</p>';
+    return;
+  }
+
   container.innerHTML = filtered.map(product => createProductCard(product)).join('');
 }
 
 function createProductCard(product) {
   const hasAffiliateLink = product.affiliateLink && product.affiliateLink.trim() !== '';
-  
+  const priceNum = parseFloat(product.price);
+  const priceFormatted = isNaN(priceNum) ? product.price : priceNum.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
   return `
     <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-black/5">
       <div class="relative aspect-square overflow-hidden">
         <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer">
-        ${product.price < 100 ? '<span class="absolute top-2 left-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-full">OFERTA</span>' : ''}
+        ${priceNum < 100 ? '<span class="absolute top-2 left-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-full">OFERTA</span>' : ''}
       </div>
       <div class="p-4">
-        <p class="text-xs text-gray-500 mb-1 uppercase tracking-wider font-semibold">${product.category}</p>
+        <p class="text-xs text-gray-500 mb-1 uppercase tracking-wider font-semibold">${product.category || ''}</p>
         <h3 class="font-medium text-gray-900 mb-2 line-clamp-2 h-10">${product.name}</h3>
+        ${product.description ? `<p class="text-sm text-gray-500 mb-2 line-clamp-2">${product.description}</p>` : ''}
         <div class="flex items-center justify-between mb-4">
-          <span class="text-xl font-bold text-primary">R$ ${parseFloat(product.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          <span class="text-xl font-bold text-primary">R$ ${priceFormatted}</span>
         </div>
         ${hasAffiliateLink ? `
           <a href="${product.affiliateLink}" target="_blank" onclick="registerClick('${product.id}')" class="block w-full py-3 bg-primary text-white text-center rounded-xl font-bold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
-            COMPRAR AGORA
+            COMPRAR
           </a>
         ` : `
           <div class="text-center py-2 text-gray-400 text-sm italic border border-dashed border-gray-200 rounded-lg">
@@ -200,40 +208,4 @@ function filterProducts(category) {
   renderProducts(data.products, category);
   // Scroll to products
   document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' });
-}
-// carregar produtos salvos manualmente
-
-const grid = document.getElementById("products-grid");
-
-if(grid){
-
-const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-
-produtos.forEach(produto => {
-
-const card = document.createElement("div");
-
-card.innerHTML = `
-<div class="bg-white rounded-xl shadow p-4">
-
-<img src="${produto.imagem}" class="w-full h-48 object-cover rounded">
-
-<h3 class="font-bold mt-3">${produto.nome}</h3>
-
-<p class="text-primary font-bold">${produto.preco}</p>
-
-<p class="text-sm text-gray-500">${produto.descricao}</p>
-
-<a href="${produto.link}" target="_blank"
-class="block mt-3 bg-black text-white text-center py-2 rounded">
-Comprar
-</a>
-
-</div>
-`;
-
-grid.appendChild(card);
-
-});
-
 }

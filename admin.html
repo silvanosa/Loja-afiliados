@@ -33,12 +33,6 @@
         <button data-tab="products" class="tab-btn w-full text-left px-4 py-3 rounded-xl font-medium transition-colors hover:bg-gray-100">
           <i class="fas fa-box mr-2"></i> Produtos
         </button>
-        <h3>Importar produto por link</h3>
-
-        <input type="text" id="productLink" placeholder="Cole o link do produto">
-
-        <button onclick="importarProduto()">Importar Produto</button>I
-        </button>
         <button data-tab="videos" class="tab-btn w-full text-left px-4 py-3 rounded-xl font-medium transition-colors hover:bg-gray-100">
           <i class="fas fa-video mr-2"></i> Vídeos
         </button>
@@ -142,28 +136,31 @@
       <!-- Products Tab -->
       <div id="products-tab" class="tab-content hidden space-y-8">
         <h2 class="text-3xl font-black">Gerenciar Produtos</h2>
-        <div id="admin-products-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Products list -->
-        </div>
-      </div>
 
-      <!-- Import Tab -->
-      <div id="import-tab" class="tab-content hidden space-y-8">
-        <h2 class="text-3xl font-black">Importar do Mercado Livre</h2>
-        <div class="admin-card max-w-xl">
-          <form id="import-form" class="space-y-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700">O que deseja buscar?</label>
-              <input type="text" name="importQuery" placeholder="Ex: iPhone 15, Tênis Nike..." class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="admin-card">
+            <h3 class="font-bold mb-4">Adicionar Produto</h3>
+            <form id="product-form" class="space-y-4">
+              <input type="text" name="productName" placeholder="Nome do Produto" required class="block w-full border-gray-300 rounded-md shadow-sm">
+              <input type="text" name="productPrice" placeholder="Preço (ex: 89.90)" required class="block w-full border-gray-300 rounded-md shadow-sm">
+              <input type="text" name="productImage" placeholder="URL da Imagem" required class="block w-full border-gray-300 rounded-md shadow-sm">
+              <input type="text" name="productLink" placeholder="Link Afiliado" required class="block w-full border-gray-300 rounded-md shadow-sm">
+              <textarea name="productDescription" placeholder="Descrição do Produto" class="block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+              <select name="productCategory" class="block w-full border-gray-300 rounded-md shadow-sm">
+                <option value="">Selecione uma Categoria</option>
+              </select>
+              <button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:opacity-90">
+                ADICIONAR PRODUTO
+              </button>
+            </form>
+          </div>
+
+          <div>
+            <h3 class="font-bold mb-4">Produtos Cadastrados</h3>
+            <div id="admin-products-list" class="space-y-4">
+              <!-- Products list -->
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Quantidade (Máx 10)</label>
-              <input type="number" name="importCount" value="10" max="10" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-            </div>
-            <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20">
-              IMPORTAR PRODUTOS
-            </button>
-          </form>
+          </div>
         </div>
       </div>
 
@@ -193,54 +190,5 @@
   </div>
 
   <script type="module" src="/src/admin.js"></script>
-<script> 
-<button class="menu-btn" onclick="abrirFormularioProduto()">
-📦 Adicionar Produto
-</button>
-</script>
-<div id="formProduto" style="display:none;padding:20px">
-
-<h3>Adicionar Produto</h3>
-
-<input id="nomeProduto" placeholder="Nome do produto"><br><br>
-
-<input id="precoProduto" placeholder="Preço"><br><br>
-
-<input id="imagemProduto" placeholder="Link da imagem"><br><br>
-
-<input id="linkProduto" placeholder="Link afiliado"><br><br>
-
-<textarea id="descricaoProduto" placeholder="Descrição"></textarea><br><br>
-
-<button onclick="salvarProduto()">Salvar Produto</button>
-
-</div>
-<script>
-
-function abrirFormularioProduto(){
-document.getElementById("formProduto").style.display = "block";
-}
-
-function salvarProduto(){
-
-let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-
-const novoProduto = {
-nome: document.getElementById("nomeProduto").value,
-preco: document.getElementById("precoProduto").value,
-imagem: document.getElementById("imagemProduto").value,
-link: document.getElementById("linkProduto").value,
-descricao: document.getElementById("descricaoProduto").value
-};
-
-produtos.push(novoProduto);
-
-localStorage.setItem("produtos", JSON.stringify(produtos));
-
-alert("Produto adicionado!");
-
-}
-
-</script>
 </body>
 </html>
